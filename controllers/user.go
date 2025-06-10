@@ -365,7 +365,7 @@ func (c *ApiController) AddUser() {
 		return
 	}
 
-	c.Data["json"] = wrapActionResponse(object.AddUser(&user))
+	c.Data["json"] = wrapActionResponse(object.AddUser(&user, c.GetAcceptLanguage()))
 	c.ServeJSON()
 }
 
@@ -545,7 +545,7 @@ func (c *ApiController) SetPassword() {
 		return
 	}
 	if organization == nil {
-		c.ResponseError(fmt.Sprintf(c.T("the organization: %s is not found"), targetUser.Owner))
+		c.ResponseError(fmt.Sprintf(c.T("auth:the organization: %s is not found"), targetUser.Owner))
 		return
 	}
 
@@ -703,7 +703,7 @@ func (c *ApiController) RemoveUserFromGroup() {
 		return
 	}
 
-	affected, err := object.DeleteGroupForUser(util.GetId(owner, name), groupName)
+	affected, err := object.DeleteGroupForUser(util.GetId(owner, name), util.GetId(owner, groupName))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
